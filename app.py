@@ -28,7 +28,15 @@ def count_words(s):
 @app.route('/json', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def json():
-    print(request.data)
+    print(type(request.data))
+    string = request.data.decode('utf-8')
+    print(type(string))
+    # d = json.dumps(decoded)
+    # print(d)
+    # input_string = json.loads(request.data['data'])
+    # print(input_string)
+
+    # count = count_words(input_string)
     data = {'somekey': 'somevalue'}
     return flask.jsonify(data), 200
 
