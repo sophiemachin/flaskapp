@@ -1,8 +1,9 @@
 from flask import Flask
 import flask
-from flask_cors import cross_origin
+from flask_cors import cross_origin, CORS
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
