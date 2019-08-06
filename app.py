@@ -3,6 +3,7 @@ import string
 from collections import Counter
 import flask
 from flask_cors import cross_origin, CORS
+import ast
 
 app = Flask(__name__)
 CORS(app)
@@ -18,18 +19,30 @@ def route1():
     return 'This is route1'
 
 
-def count_words(s):
-    punc_to_remove = string.punctuation.translate({ord('-'): None})
+def count_words(s, capitals):
+    punc_to_remove = string.punctuation.translate({
+        ord('-'): None,
+    })
+
+    s = " ".join(s.split())
+
+    s = s.replace('\n', ' ')
     no_punc = s.translate(str.maketrans('', '', punc_to_remove))
-    lower = no_punc.lower()
-    return Counter(lower.split())
+    print(capitals)
+    if capitals == 'lower':
+        s = no_punc.lower()
+    return Counter(s.split())
 
 
 @app.route('/json', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def json():
-    s = request.data.decode('utf-8')
-    count = dict(count_words(s))
+
+    d = ast.literal_eval(request.data.decode('utf-8'))
+    s = d['data']
+    capitals = d['capitals']
+
+    count = dict(count_words(s, capitals))
     return flask.jsonify(count), 200
 
 
