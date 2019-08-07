@@ -18,11 +18,20 @@ def hello_world():
 def route1():
     return 'This is route1'
 
+def get_punc_to_remove():
+    """Returns a string
 
-def count_words(s, capitals):
-    punc_to_remove = string.punctuation.translate({
+    Ensures that '-' (a dash) is not in the string
+
+    """
+
+    return string.punctuation.translate({
         ord('-'): None,
     })
+
+
+def count_words(s, capitals):
+    punc_to_remove = get_punc_to_remove()
 
     s = " ".join(s.split())
 
