@@ -45,9 +45,9 @@ def count_words(s, remove_capitals, remove_punc):
 
     Optionally converts all charts to lower case
 
-    s           - string, to count word occurrences
-    remove_capitals    - bool, if True remove capitals (convert to lowercase)
-    remove_punc        - bool, if True remove punctuation
+    s                   - string, to count word occurrences
+    remove_capitals     - bool, if True remove capitals (convert to lowercase)
+    remove_punc         - bool, if True remove punctuation
 
     """
 
