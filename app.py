@@ -70,32 +70,34 @@ def count_words(s, remove_capitals, remove_punc):
     return Counter(s.split())
 
 
-@app.route('/json', methods=['GET', 'POST'])
+@app.route('/analyse', methods=['GET', 'POST'])
 @cross_origin(origin='*')
-def json():
-
-    d = ast.literal_eval(request.data.decode('utf-8'))
-
-    s = d['data']
-    c = d['capitals'] == 'lower'
-    p = d['punctuation'] == 'remove'
-
-    count = dict(count_words(s, c, p))
-    return flask.jsonify(count), 200
-
-@app.route('/files', methods=['GET', 'POST'])
-@cross_origin(origin='*')
-def files():
+def analyse():
 
     counter = Counter()
 
-    for file in glob.glob(os.getcwd() + "/uploads/*.txt"):
-        with open(file, 'rb') as f:
-            data = f.readlines()
-            for line in data:
-                print(line)
-                s = line.decode('utf-8')
-                counter += count_words(s, False, False)
+    d = ast.literal_eval(request.data.decode('utf-8'))
+
+    f = d['file'] == 'file'
+
+    c = d['capitals'] == 'lower'
+    p = d['punctuation'] == 'remove'
+
+    if f:
+        for file in glob.glob(os.getcwd() + "/uploads/*.txt"):
+            with open(file, 'rb') as f:
+                data = f.readlines()
+                for line in data:
+                    print(line)
+                    s = line.decode('utf-8')
+                    counter += count_words(s, c, p)
+    else:
+        s = d['data']
+        counter += count_words(s, c, p)
+
+
+
+
 
     return flask.jsonify(dict(counter)), 200
 
