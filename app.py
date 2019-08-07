@@ -1,6 +1,6 @@
 from flask import Flask, request
 import string
-from collections import Counter
+from collections import Counter, OrderedDict
 import flask
 from flask_cors import cross_origin, CORS
 import ast
@@ -37,6 +37,19 @@ def remove_punctuation(s, punc_to_remove):
 
 
 def count_words(s, capitals):
+    """Count occurrences of words in a  string
+
+    Words are separated by a space
+
+    Removes all punctuation except hyphens
+
+    Optionally converts all charts to lower case
+
+    s           - string, to count word occurrences
+    capitals    - bool, if True convert to lowercase
+
+    """
+
     punc_to_remove = get_punc_to_remove()
 
     s = " ".join(s.split())
