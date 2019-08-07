@@ -95,10 +95,6 @@ def analyse():
         s = d['data']
         counter += count_words(s, c, p)
 
-
-
-
-
     return flask.jsonify(dict(counter)), 200
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -113,6 +109,12 @@ def upload():
         file.save(os.path.join(uploads, filename))
     return 'ok', 200
 
+@app.route('/remove', methods=['GET', 'POST'])
+@cross_origin(origin='*')
+def remove():
+    """Remove all uploads"""
+
+    return 'ok', 200
 
 if __name__ == '__main__':
     app.run()
