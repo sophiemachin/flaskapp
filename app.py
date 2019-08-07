@@ -36,7 +36,7 @@ def remove_punctuation(s, punc_to_remove):
     return s.translate(str.maketrans('', '', punc_to_remove))
 
 
-def count_words(s, capitals):
+def count_words(s, remove_capitals, remove_punc):
     """Count occurrences of words in a  string
 
     Words are separated by a space
@@ -47,18 +47,22 @@ def count_words(s, capitals):
 
     s           - string, to count word occurrences
     capitals    - bool, if True convert to lowercase
+    punctuation - bool, if True remove punctuation
 
     """
 
-    punc_to_remove = get_punc_to_remove()
-
     s = " ".join(s.split())
+    if remove_punc:
+        punc_to_remove = get_punc_to_remove()
+        s = remove_punctuation(s, punc_to_remove)
 
-    s = remove_punctuation(s, punc_to_remove)
-
-    if not capitals:
+    if remove_capitals:
         s = s.lower()
-    return Counter(s.split())
+
+    counter = dict(Counter(s.split()))
+    ordered = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
+
+    return ordered
 
 
 @app.route('/json', methods=['GET', 'POST'])
@@ -67,9 +71,10 @@ def json():
 
     d = ast.literal_eval(request.data.decode('utf-8'))
     s = d['data']
-    c = d['capitals'] != 'lower'
+    c = d['capitals'] == 'lower'
+    p = d['punctuation'] == 'remove'
 
-    count = dict(count_words(s, c))
+    count = dict(count_words(s, c, p))
     return flask.jsonify(count), 200
 
 
