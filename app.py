@@ -59,10 +59,7 @@ def count_words(s, remove_capitals, remove_punc):
     if remove_capitals:
         s = s.lower()
 
-    counter = dict(Counter(s.split()))
-    ordered = OrderedDict(sorted(counter.items(), key=lambda t: t[1]))
-
-    return ordered
+    return Counter(s.split())
 
 
 @app.route('/json', methods=['GET', 'POST'])
