@@ -97,6 +97,7 @@ def analyse():
 
     return flask.jsonify(dict(counter)), 200
 
+
 @app.route('/upload', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def upload():
