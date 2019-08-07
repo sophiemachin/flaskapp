@@ -74,6 +74,21 @@ def json():
     count = dict(count_words(s, c, p))
     return flask.jsonify(count), 200
 
+@app.route('/files', methods=['GET', 'POST'])
+@cross_origin(origin='*')
+def files():
+
+    counter = Counter()
+
+    for fn in request.files:
+        file = request.files[fn]
+
+        for line in file.stream:
+            s = line.decode('utf-8')
+            counter += count_words(s, False, False)
+
+    return flask.jsonify(dict(counter)), 200
+
 
 if __name__ == '__main__':
     app.run()
