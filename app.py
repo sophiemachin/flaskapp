@@ -29,17 +29,26 @@ def get_punc_to_remove():
         ord('-'): None,
     })
 
+def remove_punctuation(s, punc_to_remove):
+    """Remove chars from a string
+
+    s               - string, to remove chars from
+    punc_to_remove  - string, chars to remove
+
+    """
+
+    return s.translate(str.maketrans('', '', punc_to_remove))
+
 
 def count_words(s, capitals):
     punc_to_remove = get_punc_to_remove()
 
     s = " ".join(s.split())
 
-    s = s.replace('\n', ' ')
-    no_punc = s.translate(str.maketrans('', '', punc_to_remove))
-    print(capitals)
-    if capitals == 'lower':
-        s = no_punc.lower()
+    s = remove_punctuation(s, punc_to_remove)
+
+    if not capitals:
+        s = s.lower()
     return Counter(s.split())
 
 
@@ -49,9 +58,9 @@ def json():
 
     d = ast.literal_eval(request.data.decode('utf-8'))
     s = d['data']
-    capitals = d['capitals']
+    c = d['capitals'] != 'lower'
 
-    count = dict(count_words(s, capitals))
+    count = dict(count_words(s, c))
     return flask.jsonify(count), 200
 
 
