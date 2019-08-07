@@ -4,10 +4,18 @@ from collections import Counter, OrderedDict
 import flask
 from flask_cors import cross_origin, CORS
 import ast
+from werkzeug.utils import secure_filename
+import os
+import glob
 
 app = Flask(__name__)
 CORS(app)
 
+FILE = ''
+
+UPLOAD_FOLDER = '/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def hello_world():
@@ -67,6 +75,7 @@ def count_words(s, remove_capitals, remove_punc):
 def json():
 
     d = ast.literal_eval(request.data.decode('utf-8'))
+
     s = d['data']
     c = d['capitals'] == 'lower'
     p = d['punctuation'] == 'remove'
@@ -80,14 +89,27 @@ def files():
 
     counter = Counter()
 
-    for fn in request.files:
-        file = request.files[fn]
-
-        for line in file.stream:
-            s = line.decode('utf-8')
-            counter += count_words(s, False, False)
+    for file in glob.glob(os.getcwd() + "/uploads/*.txt"):
+        with open(file, 'rb') as f:
+            data = f.readlines()
+            for line in data:
+                print(line)
+                s = line.decode('utf-8')
+                counter += count_words(s, False, False)
 
     return flask.jsonify(dict(counter)), 200
+
+@app.route('/upload', methods=['GET', 'POST'])
+@cross_origin(origin='*')
+def upload():
+
+    uploads = os.getcwd() + '/uploads'
+
+    for fn in request.files:
+        file = request.files[fn]
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(uploads, filename))
+    return 'ok', 200
 
 
 if __name__ == '__main__':
