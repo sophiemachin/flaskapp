@@ -14,10 +14,6 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/route1')
-def route1():
-    return 'This is route1'
-
 def get_punc_to_remove():
     """Returns a string
 
