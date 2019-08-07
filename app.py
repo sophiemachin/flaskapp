@@ -102,12 +102,14 @@ def analyse():
 def upload():
 
     uploads = os.getcwd() + '/uploads'
+    uploaded = []
 
     for fn in request.files:
         file = request.files[fn]
         filename = secure_filename(file.filename)
+        uploaded.append(filename)
         file.save(os.path.join(uploads, filename))
-    return 'ok', 200
+    return flask.jsonify(uploaded), 200
 
 @app.route('/remove', methods=['GET', 'POST'])
 @cross_origin(origin='*')
