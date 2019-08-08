@@ -111,7 +111,10 @@ def upload():
 
     for fn in request.files:
         file = request.files[fn]
-        name = file.filename.rsplit('/', 1)[1]
+        if '/' in file.filename:
+            name = file.filename.rsplit('/', 1)[1]
+        else:
+            name = file.filename
         filename = secure_filename(name)
         uploaded.append(filename)
         file.save(os.path.join(uploads, filename))
