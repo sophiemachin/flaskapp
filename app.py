@@ -82,15 +82,19 @@ def analyse():
 
     c = d['capitals'] == 'lower'
     p = d['punctuation'] == 'remove'
+    u = d['uploaded']
 
     if f:
         for file in glob.glob(os.getcwd() + "/uploads/*.txt"):
-            with open(file, 'rb') as f:
-                data = f.readlines()
-                for line in data:
-                    print(line)
-                    s = line.decode('utf-8')
-                    counter += count_words(s, c, p)
+            name = file.rsplit('/', 1)[1]
+            if name in u:
+                print('in uploaded')
+                with open(file, 'rb') as f:
+                    data = f.readlines()
+                    for line in data:
+                        print(line)
+                        s = line.decode('utf-8')
+                        counter += count_words(s, c, p)
     else:
         s = d['data']
         counter += count_words(s, c, p)
@@ -107,7 +111,8 @@ def upload():
 
     for fn in request.files:
         file = request.files[fn]
-        filename = secure_filename(file.filename)
+        name = file.filename.rsplit('/', 1)[1]
+        filename = secure_filename(name)
         uploaded.append(filename)
         file.save(os.path.join(uploads, filename))
     return flask.jsonify(uploaded), 200
