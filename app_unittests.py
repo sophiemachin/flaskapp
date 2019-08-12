@@ -5,8 +5,9 @@ testSuite = unittest.TestSuite()
 
 
 class MyTest(unittest.TestCase):
-    def test_hello_world(self):
-        self.assertEqual(hello_world(), 'Hello, World!')
+    def test_get_punc_to_remove(self):
+        self.assertEqual(
+            get_punc_to_remove(), """!"#$%&'()*+,./:;<=>?@[\]^_`{|}~""")
 
 
 if __name__ == "__main__":
