@@ -61,6 +61,50 @@ class CountWords(unittest.TestCase):
                 'words!': 1,
             }))
 
+    def test_count_words_newline(self):
+        s = "before newline\nafter newline"
+        remove_capitals = True
+        remove_punc = True
+        self.assertEqual(
+            count_words(s, remove_capitals, remove_punc),
+            Counter({
+                'newline': 2,
+                'before': 1,
+                'after': 1,
+            }))
+
+    def test_count_words_tabs(self):
+        s = "before tab\tafter tab"
+        remove_capitals = True
+        remove_punc = True
+        self.assertEqual(
+            count_words(s, remove_capitals, remove_punc),
+            Counter({
+                'tab': 2,
+                'before': 1,
+                'after': 1,
+            }))
+        s = "before vtab\vafter vtab"
+        self.assertEqual(
+            count_words(s, remove_capitals, remove_punc),
+            Counter({
+                'vtab': 2,
+                'before': 1,
+                'after': 1,
+            }))
+
+    def test_count_words_return(self):
+        s = "before tab\rafter tab"
+        remove_capitals = True
+        remove_punc = True
+        self.assertEqual(
+            count_words(s, remove_capitals, remove_punc),
+            Counter({
+                'tab': 2,
+                'before': 1,
+                'after': 1,
+            }))
+
 
 if __name__ == "__main__":
     unittest.main()
