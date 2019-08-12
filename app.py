@@ -1,6 +1,6 @@
 from flask import Flask, request
 import string
-from collections import Counter, OrderedDict
+from collections import Counter
 import flask
 from flask_cors import cross_origin, CORS
 import ast
@@ -88,11 +88,9 @@ def analyse():
         for file in glob.glob(os.getcwd() + "/uploads/*.txt"):
             name = file.rsplit('/', 1)[1]
             if name in u:
-                print('in uploaded')
                 with open(file, 'rb') as f:
                     data = f.readlines()
                     for line in data:
-                        print(line)
                         s = line.decode('utf-8')
                         counter += count_words(s, c, p)
     else:
