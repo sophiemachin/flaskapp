@@ -14,7 +14,7 @@ CORS(app)
 FILE = ''
 
 UPLOAD_FOLDER = '/uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'txt'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
@@ -73,6 +73,12 @@ def count_words(s, remove_capitals, remove_punc):
 @app.route('/analyse', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def analyse():
+    """Run the analysis
+
+    If d['file'] == file, analyses the files in uploads
+    Else analyses the text in d['data']
+
+    """
 
     counter = Counter()
 
@@ -103,6 +109,7 @@ def analyse():
 @app.route('/upload', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def upload():
+    """Upload files to the uploads directory"""
 
     uploads = os.getcwd() + '/uploads'
     uploaded = []
