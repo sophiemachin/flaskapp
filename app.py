@@ -130,7 +130,12 @@ def upload():
 def remove():
     """Remove all uploads"""
 
+    for f in glob.glob(os.getcwd() + "/uploads/*.txt"):
+        os.remove(f)
+
     return 'ok', 200
+
 
 if __name__ == '__main__':
     app.run()
+
