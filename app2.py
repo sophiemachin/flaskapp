@@ -4,9 +4,21 @@ from collections import Counter
 import flask
 from flask_cors import cross_origin, CORS
 import ast
+import nltk
 
 app = Flask(__name__)
 CORS(app)
+
+PARTS = [
+    'CC',
+    'JJ',
+    'IN',
+    'NN',
+    'PRP',
+    'RB',
+    'VB',
+    'VBD',
+]
 
 
 def get_punc_to_remove():
@@ -56,28 +68,39 @@ def count_words(s, remove_capitals, remove_punc):
 
     return Counter(s.split())
 
+def year_3_analysis(s):
+
+    tokens = nltk.word_tokenize(s)
+    tagged = nltk.pos_tag(tokens)
+    entities = nltk.chunk.ne_chunk(tagged)
+
+    l = []
+
+    for entity in entities:
+        if entity[1][:2] in PARTS:
+            l.append((entity[0], entity[1][:2]))
+        else:
+            l.append((entity[0], None))
+
+    return l
+
 
 @app.route('/analyse', methods=['GET', 'POST'])
 @cross_origin(origin='*')
 def analyse():
     """Run the analysis
 
-    If d['file'] == file, analyses the files in uploads
-    Else analyses the text in d['data']
+    Analyses the text in d['data']
 
     """
 
-    counter = Counter()
-
     d = ast.literal_eval(request.data.decode('utf-8'))
 
-    c = d['capitals'] == 'lower'
-    p = d['punctuation'] == 'remove'
     s = d['data']
 
-    counter += count_words(s, c, p)
+    analysis = year_3_analysis(s)
 
-    return flask.jsonify(dict(counter)), 200
+    return flask.jsonify(analysis), 200
 
 
 
